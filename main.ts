@@ -48,8 +48,11 @@ const SYLLABLES = {
 function countSyllables(word) {
   const lower = word.toLowerCase();
   if (lower in SYLLABLES) return SYLLABLES[lower];
-  // Fallback: count vowel groups, never used for this haiku's words.
-  const groups = lower.replace(/[^aeiouy]+/g, ' ').trim().split(/\s+/).filter(Boolean);
+  // Fallback, never used for this haiku's words: count vowel groups, but
+  // drop a silent trailing 'e' first (e.g. "name" is one syllable, not
+  // two) and never return less than one.
+  const stem = lower.replace(/e$/, '');
+  const groups = stem.replace(/[^aeiouy]+/g, ' ').trim().split(/\s+/).filter(Boolean);
   return Math.max(1, groups.length);
 }
 
